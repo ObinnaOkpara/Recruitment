@@ -1,2 +1,3 @@
 ApiProject/config/*
 ApiProject/node_modules/*
+ApiProject/package-lock.json
