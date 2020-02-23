@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var mongoose = require('mongoose');
+var passport = require('passport');
+var config = require('./config/database');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -21,6 +25,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+//Create a connection to MongoDB.
+mongoose.connect(config.database, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
+        console.log('MongoDB is connected')
+    }).catch(err=>{
+        console.log('MongoDB connection unsuccessful. -- ' + err)
+    });
+
+//Declare a variable for API route.
+var api = require('./routes/api');
+
+app.use('/api', api);
+
+//Add this line to enable the CORS in Node, Express.js application.
+app.use(cors());
+
+//Initialize passport by add this line.
+app.use(passport.initialize());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
