@@ -1,9 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const fileupload = require('express-fileupload');
-
-//use file upload
-router.use(fileupload());
 
 router.post('/picture', (req, res)=>{
     if(req.files.dp){
@@ -24,3 +20,5 @@ router.post('/picture', (req, res)=>{
         res.json({success:false, message:'file not found'});
     }
 })
+
+module.exports = router;

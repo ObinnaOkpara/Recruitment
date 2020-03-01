@@ -68,7 +68,7 @@ ResumeSchema.virtual('experiences', {
     justOne: false // set true for one-to-one relationship
 });
 
-JobSchema.virtual('submittedResumes', {
+ResumeSchema.virtual('submittedResumes', {
     ref: 'SubmittedResume',
     localField: '_id',
     foreignField: 'resume',
@@ -76,5 +76,3 @@ JobSchema.virtual('submittedResumes', {
 });
 
 module.exports = mongoose.model('Resume', ResumeSchema);
-
-Attachments

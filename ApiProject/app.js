@@ -3,13 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var fileupload = require('express-fileupload');
 
 var mongoose = require('mongoose');
 var passport = require('passport');
 var config = require('./config/database');
+var cors = require('cors');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -23,8 +23,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//use file upload
+app.use(fileupload());
 
 //Create a connection to MongoDB.
 mongoose.connect(config.database, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
@@ -33,9 +33,8 @@ mongoose.connect(config.database, { useCreateIndex: true, useNewUrlParser: true,
         console.log('MongoDB connection unsuccessful. -- ' + err)
     });
 
-//Declare a variable for API route.
-var api = require('./routes/api');
-app.use('/api', api);
+var indexRouter = require('./routes/index');
+app.use('/', indexRouter);
 
 //Declare a variable for Company api endpoints.
 var companyroutes = require('./routes/companyroutes');
@@ -48,6 +47,14 @@ app.use('/api/uploads', uploadroutes);
 //Declare a variable for Job api endpoints.
 var jobroutes = require('./routes/jobroutes');
 app.use('/api/jobs', jobroutes);
+
+//Declare a variable for Resume api endpoints.
+var resumeroutes = require('./routes/resumeroutes');
+app.use('/api/resumes', resumeroutes);
+
+//Declare a variable for User api endpoints.
+var userroutes = require('./routes/userroutes');
+app.use('/api/users', userroutes);
 
 //Add this line to enable the CORS in Node, Express.js application.
 app.use(cors());
