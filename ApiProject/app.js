@@ -35,8 +35,19 @@ mongoose.connect(config.database, { useCreateIndex: true, useNewUrlParser: true,
 
 //Declare a variable for API route.
 var api = require('./routes/api');
-
 app.use('/api', api);
+
+//Declare a variable for Company api endpoints.
+var companyroutes = require('./routes/companyroutes');
+app.use('/api/companies', companyroutes);
+
+//Declare a variable for fileUpload api endpoints.
+var uploadroutes = require('./routes/fileupload');
+app.use('/api/uploads', uploadroutes);
+
+//Declare a variable for Job api endpoints.
+var jobroutes = require('./routes/jobroutes');
+app.use('/api/jobs', jobroutes);
 
 //Add this line to enable the CORS in Node, Express.js application.
 app.use(cors());

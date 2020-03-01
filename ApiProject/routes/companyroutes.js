@@ -3,11 +3,18 @@ var router = express.Router();
 const Company = require('../models/company');
 
 router.get('/', async (req, res)=>{
-    Company.find().then(companies=>{
-        res.json({success:true, message:'Successful', data:companies});
-    }).catch(err=>{
-        res.json({success:false, message:err.message});
-    })
+    const perPage = 10;
+    const curPage = Math.max(1, req.params.p);
+    const numToSkip = (curPage-1) * perPage;
+
+    Company.find()
+        .limit(perPage)
+        .skip(numToSkip)
+        .then(companies=>{
+            res.json({success:true, message:'Successful', data:companies});
+        }).catch(err=>{
+            res.json({success:false, message:err.message});
+        })
 })
 
 router.get('/:companyid', async(req, res)=>{

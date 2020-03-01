@@ -3,11 +3,54 @@ var router = express.Router();
 const Job = require('../models/job');
 
 router.get('/', async (req, res)=>{
-    Job.find().sort('-date_created').then(jobs=>{
-        res.json({success:true, message:'Successful', data:jobs});
-    }).catch(err=>{
-        res.json({success:false, message:err.message});
-    })
+    const searchQuery = req.params.s;
+    const locationQuery = req.params.l;
+    const perPage = 10;
+    const curPage = Math.max(1, req.params.p);
+    const numToSkip = (curPage-1) * perPage;
+
+    if (searchQuery && locationQuery) {
+        Job.find({title: {"$regex": searchQuery, "$options": "i"}, 
+                    location: {"$regex": locationQuery, "$options": "i"}})
+        .limit(perPage)
+        .skip(numToSkip)
+        .sort('-date_created')
+        .then(jobs=>{
+            res.json({success:true, message:'Successful', data:jobs});
+        }).catch(err=>{
+            res.json({success:false, message:err.message});
+        })
+    }else if(searchQuery){
+        Job.find({title: {"$regex": searchQuery, "$options": "i"}})
+        .limit(perPage)
+        .skip(numToSkip)
+        .sort('-date_created')
+        .then(jobs=>{
+            res.json({success:true, message:'Successful', data:jobs});
+        }).catch(err=>{
+            res.json({success:false, message:err.message});
+        })
+    }else if(locationQuery){
+        Job.find({location: {"$regex": locationQuery, "$options": "i"}})
+        .limit(perPage)
+        .skip(numToSkip)
+        .sort('-date_created')
+        .then(jobs=>{
+            res.json({success:true, message:'Successful', data:jobs});
+        }).catch(err=>{
+            res.json({success:false, message:err.message});
+        })
+    }else{
+        Job.find()
+        .limit(perPage)
+        .skip(numToSkip)
+        .sort('-date_created')
+        .then(jobs=>{
+            res.json({success:true, message:'Successful', data:jobs});
+        }).catch(err=>{
+            res.json({success:false, message:err.message});
+        })
+    }
 })
 
 router.get('/recent', async (req, res)=>{
@@ -37,9 +80,9 @@ router.get('/:jobid', async(req, res)=>{
 router.post('/', async(req, res)=>{
     const job = new Job({
         companyId: req.body.companyId,
-        title: req.body.title,
+        title: req.body.title.toLowerCase(),
         type_of_job: req.body.type_of_job,
-        location: req.body.location,
+        location: req.body.location.toLowerCase(),
         salary: req.body.salary,
         category: req.body.category,
         job_tags: req.body.job_tags,
