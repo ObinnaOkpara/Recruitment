@@ -47,4 +47,11 @@ var JobSchema = new Schema({
     },
 });
 
+JobSchema.virtual('submittedResumes', {
+    ref: 'SubmittedResume',
+    localField: '_id',
+    foreignField: 'job',
+    justOne: false // set true for one-to-one relationship
+});
+
 module.exports = mongoose.model('Job', JobSchema);

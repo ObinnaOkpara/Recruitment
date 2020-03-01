@@ -68,6 +68,13 @@ ResumeSchema.virtual('experiences', {
     justOne: false // set true for one-to-one relationship
 });
 
+JobSchema.virtual('submittedResumes', {
+    ref: 'SubmittedResume',
+    localField: '_id',
+    foreignField: 'resume',
+    justOne: false // set true for one-to-one relationship
+});
+
 module.exports = mongoose.model('Resume', ResumeSchema);
 
 Attachments

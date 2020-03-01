@@ -2,12 +2,12 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var CandidateSchema = new Schema({
-  lastname: {
+  fullname: {
     type: String,
     required: true
   },
-  othernames: {
-    type: String
+  email: {
+      type: String,
   },
   date: {
       type: Date,
